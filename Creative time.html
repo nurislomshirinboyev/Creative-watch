@@ -1,0 +1,468 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        * {
+    margin: 0;
+    padding: 0;
+}
+
+*,
+*::before,
+*::after {
+    box-sizing: inherit;
+}
+
+html {
+    font-size: 62.5%;
+}
+
+body {
+    box-sizing: border-box;
+    font-family: 'Open Sans', sans-serif;
+    font-weight: 400;
+    font-size: 1.6rem;
+    line-height: 1.7rem;
+    transition: all .5s;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.slider-container {
+    position: relative;
+    width: 900px;
+    height: 450px;
+    overflow: hidden;
+}
+.filter {
+    content: '';
+    position: absolute;
+    background-color: rgb(162, 210, 255);
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    transition: all .2s;
+    z-index: -1;
+    background-size: 100% 800%;
+    background-image: linear-gradient(
+        to bottom,
+        rgb(162, 210, 255) 15%,
+        rgb(226, 70, 161) 40%,
+        rgb(123, 77, 230) 50%,
+        rgb(25, 26, 87) 60%,
+        rgb(25, 26, 87) 100%
+    );
+    background-position: 0% 0%;
+    background-repeat: repeat-y;
+}
+
+.time {
+    position: absolute;
+    color: white;
+    font-size: 50px;
+    text-align: center;
+    top: 40px;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+.sun {
+    height: 100px;
+    width: 100px;
+    background-color: rgb(255, 230, 0);
+    border-radius: 50%;
+    position: absolute;
+    transform-origin: center;
+    top: 450px;
+    left: 0px;
+    transform: translate(-50%, -50%);
+    background-color: rgb(255, 230, 0);
+    box-shadow: inset -2px -5px 5px rgb(204, 156, 0), 
+        inset 2px 5px 5px rgb(255, 246, 168);
+}
+
+.moon {
+    height: 100px;
+    width: 100px;
+    border-radius: 50%;
+    position: absolute;
+    transform-origin: center;
+    top: 450px;
+    left: 0px;
+    transform: translate(-50%, -50%);
+    background-color: rgb(215, 223, 233);
+    box-shadow: inset -2px -5px 5px rgb(112, 140, 175), 
+        inset 2px 5px 5px rgb(237, 241, 245);
+}
+
+.crater {
+    background-color: rgb(158, 176, 197);
+    position: absolute;
+    border-radius: 50%;
+    box-shadow: inset 2px 5px 2px rgb(133, 156, 185);
+    transition: all .5s;
+}
+.crater--1 {
+    height: 15px;
+    width: 15px;
+    top: 20px;
+    left: 30px;
+}
+.crater--2 {
+    height: 32px;
+    width: 32px;
+    top: 45px;
+    left: 25px;
+}
+.crater--3 {
+    height: 22px;
+    width: 22px;
+    top: 20px;
+    right: 15px;
+}
+.crater--night {
+    opacity: 1;
+}
+
+.sun-path {
+    color: rgba(255, 255, 255, 0.219);
+    stroke-width: 20;
+}
+
+/* Stars */
+.stars {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    transform: translateY(100%);
+    opacity: 1;
+    transition: all 1s;
+}
+.star {
+    position: absolute;
+    background-color: white;
+    clip-path: polygon(50% 0, 65% 35%, 100% 50%, 65% 65%, 50% 100%, 35% 65%, 0 50%, 35% 35%);
+    transition: all .5s;
+    height: 20px;
+    width: 20px;
+    opacity: .6;
+    animation: sparkle 3s linear .5s infinite;
+}
+.star-round {
+    height: 3px;
+    width: 3px;
+    border-radius: 50%;
+    position: absolute;
+    background-color: white;
+    opacity: .6;
+    transition: all .5s;
+}
+
+@keyframes sparkle {
+    0% { opacity: .6; }
+    50% { opacity: .8; }
+    100% { opacity: .6; }
+}
+
+/* Clouds */
+.clouds {
+    opacity: 1;
+    transition: all 3s;
+}
+.cloud {
+    position: absolute;
+    background-color: rgb(255, 255, 255);
+    color: rgb(255, 255, 255);
+    height: 50px;
+    width: 300px;
+    border-radius: 45px;
+    transition: all 2s;
+}
+.cloud::after {
+    content: '';
+    position: absolute;
+    background-color: currentColor;
+    left: 20px;
+    top: -20px;
+    height: 60px;
+    width: 60px;
+    border-radius: 50%;
+    box-shadow: 
+        35px -8px currentColor,
+        70px -22px currentColor,
+        100px -18px currentColor,
+        140px -25px currentColor,
+        180px -12px currentColor,
+        210px -1px currentColor;
+}
+
+.cloud--1 {
+    top: 120px;
+    left: 60px;
+    opacity: .6;
+}
+.cloud--2 {
+    top: 90px;
+    left: 120px;
+    opacity: .4;
+    transform: scaleY(1.1);
+}
+.cloud--3 {
+    top: 160px;
+    right: 60px;
+    opacity: .6;
+}
+.cloud--4 {
+    bottom: 80px;
+    right: 250px;
+    opacity: .4;
+    transform: scaleY(1.4);
+}
+.cloud--5 {
+    bottom: 50px;
+    right: 200px;
+    opacity: .6;
+}
+.cloud--6 {
+    bottom: 80px;
+    left: -20px;
+    opacity: .4;
+}
+
+/* Night Transitions */
+.slider-container--evening > .stars {
+    transform: translateY(0);
+    opacity: .5;
+}
+.slider-container--night > .stars {
+    transform: translateY(0);
+    opacity: 1;
+}
+.slider-container--night > .clouds {
+    opacity: 0;
+}
+.slider-container--evening .cloud--1, .slider-container--night .cloud--1 { transform: translateX(-400px); }
+.slider-container--evening .cloud--2, .slider-container--night .cloud--2 { transform: scaleY(1.1) translateX(-450px); }
+.slider-container--evening .cloud--3, .slider-container--night .cloud--3 { transform: translateX(400px); }
+.slider-container--evening .cloud--4, .slider-container--night .cloud--4 { transform: scaleY(1.4) translateX(600px); }
+.slider-container--evening .cloud--5, .slider-container--night .cloud--5 { transform: translateX(600px); }
+.slider-container--evening .cloud--6, .slider-container--night .cloud--6 { transform: translateX(-350px); }
+
+.slider-container--morning .cloud { opacity: .2; }
+
+.slider-wrapper {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    min-height: 450px;
+    padding: 10px;
+    z-index: -1;
+    background-color: aliceblue;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+    </style>
+</head>
+<body>
+    <div class="slider-wrapper" id="sliderWrapper">
+        <div class="slider-container" id="sliderContainer">
+            <div class="filter" id="filter"></div>
+            <div class="stars" id="stars"></div>
+            <div class="clouds">
+                <div class="cloud cloud--1"></div>
+                <div class="cloud cloud--2"></div>
+                <div class="cloud cloud--3"></div>
+                <div class="cloud cloud--4"></div>
+                <div class="cloud cloud--5"></div>
+                <div class="cloud cloud--6"></div>
+            </div>
+    
+            <h2 class="time" id="time"></h2>
+    
+            <svg width="900" height="450" xmlns="http://www.w3.org/2000/svg" class="sun-path">
+                <path d="M 0 500 Q 450 -180 900 500" stroke="currentColor" fill="transparent" id="sunpath"/>
+            </svg>
+            <div class="sun" id="sun"></div>
+            <div class="moon" id="moon">
+                <div class="crater crater--1"></div>
+                <div class="crater crater--2"></div>
+                <div class="crater crater--3"></div>
+            </div>
+    
+        </div>
+    </div>
+    <script>
+        const resize = false;
+
+const timeOutput = document.getElementById('time');
+const sliderContainer = document.getElementById('sliderContainer');
+const filter = document.getElementById('filter');
+
+const sun = document.getElementById('sun');
+const moon = document.getElementById('moon');
+const path = document.getElementById('sunpath');
+
+let timeValue = 12;
+timeOutput.innerHTML = computeTime(timeValue);
+sun.style.left = 450 + 'px';
+sun.style.top = findY(path, 450) + 'px';
+moon.style.left = -450 + 'px';
+moon.style.top = findY(path, -450) + 'px';
+
+
+function findY(path, x) {
+	let pathLength = path.getTotalLength();
+	let start = 0;
+	let end = pathLength;
+	let target = (start + end) / 2
+
+	x = Math.max(x, path.getPointAtLength(0).x)
+	x = Math.min(x, path.getPointAtLength(pathLength).x)
+
+	while (target >= start && target <= pathLength) {
+		let pos = path.getPointAtLength(target)
+
+		if (Math.abs(pos.x - x) < 0.001) {
+			return pos.y 
+		} else if (pos.x > x) {
+			end = target
+		} else {
+			start = target
+		}
+		target = (start + end) / 2
+	}
+}
+
+
+dragElement(sun, moon);
+dragElement(moon, sun);
+
+let selectedElement;
+function dragElement(elem, otherEl) {
+	let pos1 = 0, pos2 = 0, pos3 = 0, pos4 = 0;
+	elem.onmousedown = dragMouseDown;
+
+	function dragMouseDown(e) {
+		e = e || window.event;
+		e.preventDefault();
+		pos3 = e.clientX;
+		pos4 = e.clientY;
+		document.onmouseup = closeDragElement;
+		document.onmousemove = elementDrag;
+	}
+
+	function elementDrag(e) {
+		e = e || window.event;
+		e.preventDefault();
+		pos1 = pos3 - e.clientX;
+		pos2 = pos4 - e.clientY;
+		pos3 = e.clientX;
+		pos4 = e.clientY;
+		let pos5 = findY(path, elem.offsetLeft - pos1);
+		elem.style.top = (pos5) + 'px';
+		elem.style.left = (elem.offsetLeft - pos1) + 'px';
+
+		let otherPos1 = (elem.offsetLeft - pos1) >= 450 ? (elem.offsetLeft - pos1) - 832 : (elem.offsetLeft - pos1) + 832
+		let otherPos5 = findY(path, otherPos1);
+		otherEl.style.left = otherPos1 + 'px';
+		otherEl.style.top = otherPos5 + 'px';
+
+		let position = elem === sun ? Number(elem.style.left.slice(0, -2)) - 34 : Number(elem.style.left.slice(0, -2)) - 34 - 832;
+		timeValue = position >= 0 ? Math.round(((position / (832 / 12) + 6)*10)/5)*5/10 : Math.round((((position) + 832) / (832 / 12) +18)*10/5)*5/10;
+		if(timeValue > 24) {
+			timeValue -=24;
+		}
+
+		const tz = [4, 8, 17, 20];
+
+		let time = timeValue < tz[0] || timeValue > tz[3] ? 'night' : timeValue >= tz[0] && timeValue <= tz[1] ? 'morning' : timeValue > tz[1] && timeValue < tz[2] ? 'noon' : 'evening';
+		let bgOffset = timeValue >= 12 ? timeValue - 12 : 12 - timeValue;
+		bgOffset = bgOffset * 7 + '%';
+		console.log(timeValue);
+		console.log(bgOffset);
+		sliderContainer.classList = 'slider-container';
+		sliderContainer.classList.add('slider-container--' + time);
+
+		let timeString = computeTime(timeValue)
+		timeOutput.innerHTML = timeString;
+
+		let bgPos = Number(window.getComputedStyle(filter,null).backgroundPositionY.slice(0,-1));
+		filter.style.backgroundPositionY = bgOffset;
+	}
+
+	function closeDragElement() {
+		document.onmouseup = null;
+		document.onmousemove = null;
+	}
+}
+
+function computeTime(original) {
+	let timeStrings = (original+'').split('.');
+	timeStrings[1] = timeStrings[1] || '0';
+	return timeStrings.join(':').replace(':0', ':00').replace(':5', ':30');
+}
+
+const starContainer = document.getElementById('stars');
+makeStars(13, 25, 400, 25, 850);
+function makeStars(numStars, xmin, xmax, ymin, ymax) {
+	for(let i = 0; i <= numStars; i++) {
+		let tempStar = document.createElement('div');
+		tempStar.classList.add('star');
+		let starPosx = Math.floor(Math.random() * (xmax-xmin)) + xmin;
+		let starPosy = Math.floor(Math.random() * (ymax-ymin)) + ymin;
+		tempStar.style.top = starPosx + 'px';
+		tempStar.style.left = starPosy + 'px';
+
+		let starSize = Math.floor(Math.random() * (22-12)) + 12;
+		tempStar.style.height = starSize + 'px';
+		tempStar.style.width = starSize + 'px';
+
+		let starDelay = Math.floor(Math.random() * 3);
+		tempStar.style.animationDelay = starDelay + 's';
+
+		starContainer.appendChild(tempStar);
+	}
+	for(let i = 0; i <= numStars*2; i++) {
+		let tempStar = document.createElement('div');
+		tempStar.classList.add('star-round');
+		let starPosx = Math.floor(Math.random() * (xmax-xmin)) + xmin;
+		let starPosy = Math.floor(Math.random() * (ymax-ymin)) + ymin;
+		tempStar.style.top = starPosx + 'px';
+		tempStar.style.left = starPosy + 'px';
+
+		starContainer.appendChild(tempStar);
+	}
+
+}
+
+const wrapper = document.getElementById('sliderWrapper');
+let sliderHeight = sliderContainer.clientHeight;
+let sliderWidth = sliderContainer.clientWidth;
+let wrapperHeight;
+let wrapperWidth;
+window.onresize = resizeSlider;
+
+resizeSlider();
+
+function resizeSlider() {
+	if(resize) {
+		wrapperHeight = wrapper.clientHeight - 50;
+		wrapperWidth = wrapper.clientWidth - 50;
+		let scale = Math.min(wrapperHeight / sliderHeight, wrapperWidth / sliderWidth);
+
+		sliderContainer.style.transform = scale >= 1 ? `scale(${scale})` : 'scale(1)';
+	}
+}
+    </script>
+</body>
+</html>
